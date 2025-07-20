@@ -1,36 +1,82 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>啟動 Age of Empires</title>
-    <script>
-        function getNumberFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get("number");  // 取得 URL 參數中的 "number"
-        }
-
-        function redirect() {
-            const number = getNumberFromURL();
-            if (number) {
-                const aoeLink = `aoe2de://0/${number}`;
-                window.location.href = aoeLink;
-
-                setTimeout(() => {
-                    alert("如果沒有自動啟動，請確保已安裝應用程式，或手動點擊下方連結。");
-                }, 3000);
-
-                // 更新頁面上的超連結
-                document.getElementById("aoe-link").href = aoeLink;
-                document.getElementById("aoe-link").textContent = aoeLink;
-            } else {
-                alert("無效的連結，請確認網址是否正確。");
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AOE2 房轉換器</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    input {
+      font-size: 1.2em;
+      padding: 6px;
+      width: 100%;
+      max-width: 500px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+    .links {
+      margin-top: 20px;
+      font-size: 1.1em;
+      padding: 10px;
+      border-radius: 6px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    a {
+      display: block;
+      margin: 5px 0;
+      color: #0645AD;
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body onload="redirect()">
-    <h1>正在啟動 Age of Empires...</h1>
-    <p>如果沒有自動啟動，請 <a id="aoe-link" href="#">點擊這裡</a>。</p>
+<body>
+  <h1>AOE2 房號連結轉換器</h1>
+  <p>請輸入協定連結（如 <code>aoe2de://0/407499724</code> 或 <code>aoe2de://1/407499724</code>）：</p>
+
+  <input type="text" id="aoeInput" placeholder="貼上 aoe2de:// 開頭的連結" />
+  <button onclick="convert()">產生 GitHub 跳轉連結</button>
+
+  <div class="links" id="result" style="display:none;">
+    <strong>自動跳轉網址：</strong>
+    <a id="linkJoin" href="#" target="_blank"></a>
+    <a id="linkSpectate" href="#" target="_blank"></a>
+  </div>
+
+  <script>
+    function convert() {
+      const input = document.getElementById("aoeInput").value.trim();
+      const match = input.match(/^aoe2de:\/\/[01]\/(\d+)$/);
+      if (!match) {
+        alert("請輸入正確格式，例如 aoe2de://0/123456");
+        return;
+      }
+
+      const number = match[1];
+      const base = "https://frank914.github.io/autoCovert";
+
+      const urlJoin = `${base}/?number=${number}&mode=join`;
+      const urlSpectate = `${base}/?number=${number}&mode=spectate`;
+
+      const linkJoin = document.getElementById("linkJoin");
+      const linkSpectate = document.getElementById("linkSpectate");
+
+      linkJoin.href = urlJoin;
+      linkJoin.textContent = urlJoin;
+
+      linkSpectate.href = urlSpectate;
+      linkSpectate.textContent = urlSpectate;
+
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
 </body>
 </html>
